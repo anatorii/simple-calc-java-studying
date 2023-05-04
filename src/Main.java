@@ -4,11 +4,23 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) throws IOException {
 
+        File outFile = new File("output.txt");
+        FileWriter out = new FileWriter(outFile);
+
         File file = new File("input.txt");
 
-
         Scanner scanner = new Scanner(file);
-        String expression = scanner.nextLine();
+
+        String expression;
+        while (scanner.hasNextLine()) {
+            expression = scanner.nextLine();
+            doCalc(expression, out);
+            out.write("\n");
+        }
+        out.close();
+    }
+
+    public static void doCalc(String expression, OutputStreamWriter out) throws IOException {
         String[] parts = expression.split(" ");
 
         double opLeft, opRight;
@@ -17,18 +29,18 @@ public class Main {
             opLeft = Double.parseDouble(parts[0]);
             opRight = Double.parseDouble(parts[2]);
         } catch (NumberFormatException | NullPointerException exception) {
-            System.out.println("Error! Not number");
+            out.write(expression + " = Error! Not number");
             return;
         }
 
         if (!(parts[1].equals("+") || parts[1].equals("-") || parts[1].equals("/") || parts[1].equals("*"))) {
-            System.out.println("Operation Error!");
+            out.write(expression + " = Operation Error!");
             return;
         }
 
 
         if (parts[1].equals("/") && opRight == 0.0) {
-            System.out.println("Error! Division by zero");
+            out.write(expression + " = Error! Division by zero");
             return;
         }
 
@@ -50,19 +62,11 @@ public class Main {
                     break;
             }
         } catch (ArithmeticException ex) {
-            System.out.println("Error! Division by zero");
+            out.write(expression + " = Error! Division by zero");
             return;
         }
-
-        File outFile = new File("output.txt");
-
-        FileWriter out = new FileWriter(outFile);
-        out.write(String.valueOf(result));
+        out.write(expression + " = " + result);
         out.flush();
-        out.close();
-
-        System.out.println(result);
-
 
     }
 }
