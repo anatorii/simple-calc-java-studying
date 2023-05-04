@@ -1,5 +1,4 @@
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.Scanner;
 
 public class Main {
@@ -33,8 +32,9 @@ public class Main {
             return;
         }
 
+        double result = 0;
+
         try {
-            double result = 0;
             switch (parts[1]) {
                 case "+":
                     result = opLeft + opRight;
@@ -49,10 +49,20 @@ public class Main {
                     result = opLeft / opRight;
                     break;
             }
-            System.out.println(result);
         } catch (ArithmeticException ex) {
             System.out.println("Error! Division by zero");
+            return;
         }
+
+        File outFile = new File("output.txt");
+
+        FileWriter out = new FileWriter(outFile);
+        out.write(String.valueOf(result));
+        out.flush();
+        out.close();
+
+        System.out.println(result);
+
 
     }
 }
